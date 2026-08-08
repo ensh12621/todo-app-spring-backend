@@ -2,6 +2,8 @@ package com.kkh.todoapp.filter;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +25,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private JwtService jwtService;
     private UserDetailsService userDetailsService;
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+
     public JwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
@@ -31,6 +35,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        logger.info("필터 진입 중..");
 
         /*
          * 
@@ -49,13 +55,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String token = null, email = null;
 
+        int n = 1;
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             email = jwtService.extractSubject(token);
+            n = 2;
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            n = 3;
 
             if (jwtService.validateToken(token)) { // check expiration date
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -63,8 +73,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                n = 4;
             }
         }
+
+
+        logger.info("n => {}", n);
 
         filterChain.doFilter(request, response);
     }

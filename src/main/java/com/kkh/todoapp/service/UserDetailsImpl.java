@@ -9,19 +9,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserDetailsImpl implements UserDetails {
 
     private String email;
-    
+    private String password;
     private Collection<? extends GrantedAuthority> authorities; 
 
-    public UserDetailsImpl(String email, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.authorities = authorities;
+        this.password = password;
     }
 
     @Override
     public @Nullable String getPassword() {
-        // no use
-        return null;
+        return password;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 
 
     @Override

@@ -1,5 +1,7 @@
 package com.kkh.todoapp.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,8 @@ public class MemberController {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
+    private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
+
     public MemberController(MemberService memberService, JwtService jwtService, AuthenticationManager authenticationManager){
         this.memberService = memberService;
         this.jwtService = jwtService;
@@ -42,7 +46,6 @@ public class MemberController {
 
     } 
 
-    @PreAuthorize("hasRole('tester')")
     @GetMapping("login-done-test")
     public String loginDoneTest(){
         return "success";
@@ -53,9 +56,15 @@ public class MemberController {
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
         
 
+        logger.info("login() 진입 중..");
+
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
+
+        
+        logger.info("login email: {}, password: {} authenticated(): {}", loginDTO.getEmail(), loginDTO.getPassword(), authentication.isAuthenticated());
+
 
         if(authentication.isAuthenticated()){
             return ResponseEntity.ok(jwtService.generateJwt(loginDTO));
