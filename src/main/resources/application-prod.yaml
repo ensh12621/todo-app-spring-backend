@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: todoapp
+  #datasource:
+    # url: jdbc:postgresql://127.0.0.1:5432/test
+    # driver-class-name: org.postgresql.Driver
+    # username: postgres
+    # password: winstead12!
+
+  datasource:  
+  # 환경변수가 안 먹힐 것을 대비해 기본값을 127.0.0.1이 아니라 쿠버네티스 서비스 이름으로 지정!
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# spring과 같은 레벨(들여쓰기 없음)로 배치
+  # security:
+  #   user:
+  #     name: test
+  #     password: 1234
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: INFO
+        jdbc:
+          datasource: INFO
+      hibernate:
+        SQL: INFO
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    com:
+      zaxxer:
+        hikari: INFO

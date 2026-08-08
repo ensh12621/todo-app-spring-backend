@@ -1,19 +1,19 @@
 spring:
   application:
     name: todoapp
+
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/test
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: winstead12!
+
   jpa:
     hibernate:
-      ddl-auto: validate  # 또는 validate
-# spring과 같은 레벨(들여쓰기 없음)로 배치
-  # security:
-  #   user:
-  #     name: test
-  #     password: 1234
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 logging:
   level:
     org:

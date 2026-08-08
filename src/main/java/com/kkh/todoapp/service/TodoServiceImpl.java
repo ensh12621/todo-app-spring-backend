@@ -2,6 +2,7 @@ package com.kkh.todoapp.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.kkh.todoapp.entity.TodoEntity;
@@ -30,5 +31,11 @@ public class TodoServiceImpl implements TodoService{
         TodoEntity entity = new TodoEntity(vo.getTitle(), vo.getContent());
         TodoEntity saved = todoRepository.save(entity);
         return saved != null ? true : false;       
+    }
+
+    @PreAuthorize("hasRole('TESTER')")
+    @Override
+    public String test() {
+        return "200";
     }
 }
