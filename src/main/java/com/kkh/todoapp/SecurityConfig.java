@@ -35,9 +35,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
 
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/todo/**").authenticated()
+                .cors(cors -> cors.disable())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/todo/**").permitAll()
                                                     .requestMatchers("/member/login-done-test").authenticated()
                                                     .requestMatchers("/member/login").permitAll()
+                                                    .requestMatchers("/member/add").permitAll()
                                                     
                         .anyRequest().permitAll())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

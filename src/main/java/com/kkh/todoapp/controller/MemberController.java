@@ -38,6 +38,9 @@ public class MemberController {
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody MemberDTO memberDto){
 
+        logger.info("웹 요청 들어옴 .. /member/add");
+        logger.info("memberDTO - {}", memberDto.toString());
+
         if(!memberService.add(memberDto)){
             return ResponseEntity.badRequest().body("error: failed to save new user");
         }
