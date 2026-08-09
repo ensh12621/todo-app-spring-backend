@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.kkh.todoapp.vo.LoginDTO;
@@ -22,9 +23,13 @@ public class JwtServiceImpl implements JwtService {
 
     public static final String SECRET = "53675F452848284D623676397951655468576D5A71668597033732F423347437";
 
+    public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
+
     @Override
     public String generateJwt(LoginDTO loginDTO) {
         Map<String, Object> claims = new HashMap<>();
+
+        logger.info("generate token that expires at {}", new Date(System.currentTimeMillis() + 1000 * 60 * 30));
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -66,7 +71,10 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean validateToken(String token) {
-        return extractExpirationDate(token).before(new Date());
+        
+        boolean result = extractExpirationDate(token).after(new Date());
+        logger.info("validateToken() .. date {}, result => {}", extractExpirationDate(token).toString(), result);
+        return result;
     }
 
 }

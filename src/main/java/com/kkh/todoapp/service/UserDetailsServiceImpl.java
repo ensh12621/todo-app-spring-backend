@@ -33,12 +33,16 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         logger.info("loadUserByName() ... memberEntity email? {}, password {}", memberEntity.getEmail(), memberEntity.getPassword());
         
 
-        return new UserDetailsImpl(
+        UserDetailsImpl userDetails = new UserDetailsImpl(
             memberEntity.getEmail(), 
             memberEntity.getPassword(),
             List.of(memberEntity.getRoles().split(","))
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList()));
+
+        logger.info("userDetails authorities: {}", userDetails.getAuthorities().toString());
+
+        return userDetails;
     }
     
 }

@@ -50,6 +50,14 @@ public class MemberController {
     public String loginDoneTest(){
         return "success";
     }
+    
+    @PreAuthorize("hasAuthority('tester')")
+    @GetMapping("login-done-test2")
+    public String loginDoneTest2(){
+        return "success";
+    }
+
+
 
     
     @PostMapping("/login")
