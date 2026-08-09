@@ -10,8 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "member")
-@Table
+@Entity
+@Table(name="members")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

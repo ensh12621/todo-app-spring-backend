@@ -20,6 +20,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
 
 # spring과 같은 레벨(들여쓰기 없음)로 배치
   # security:
@@ -35,6 +37,8 @@ logging:
         jdbc:
           datasource: INFO
       hibernate:
+        tool:
+          schema: DEBUG
         SQL: INFO
         type:
           descriptor:

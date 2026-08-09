@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kkh.todoapp.service.JwtService;
@@ -64,7 +65,8 @@ public class MemberController {
 
     
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
+    @ResponseBody
+    public String login(@RequestBody LoginDTO loginDTO){
         
 
         logger.info("login() 진입 중..");
@@ -78,14 +80,21 @@ public class MemberController {
 
 
         if(authentication.isAuthenticated()){
-            return ResponseEntity.ok(jwtService.generateJwt(loginDTO));
+            
+            String jwt = jwtService.generateJwt(loginDTO);
+            logger.info("jwt token => ({})", jwt);
+            return jwt;
+            // return ResponseEntity.ok(jwt);
         }
+
+        
 
         // if(memberService.matchLogin(loginDTO)){
         //     return ResponseEntity.ok(jwtService.generateJwt(loginDTO));
         // }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("not authenticated");
+        // return ResponseEntity.status(HttpStatus.FORBIDDEN).body("not authenticated");
+        return "not authenticated";
 
     }
 }
