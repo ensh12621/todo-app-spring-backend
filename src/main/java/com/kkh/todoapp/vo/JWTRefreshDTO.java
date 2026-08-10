@@ -6,11 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class LoginDTO {
-
-    private String email;
-    private String password;
+public class JWTRefreshDTO {
+    
+    private String jwt;
+    private String refresh;
 }

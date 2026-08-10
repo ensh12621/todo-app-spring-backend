@@ -1,5 +1,8 @@
 package com.kkh.todoapp.entity;
 
+import java.time.Instant;
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,32 +12,30 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="members")
+@Table(name="refresh")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberEntity {
+@Builder
+public class RefreshTokenEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_pk")
-    private int memberPk;
+    @Column(name="refresh_pk")
+    private int refreshPk;
 
-    @Column(unique=true, nullable = false)
-    private String email;
+    @Column(nullable = false, unique = true)
+    private String token;
 
-    private String nickname;
+    @Column(name="expiration_at", nullable = false)
+    private Instant expirationAt;
 
-    @Column(nullable = false)
-    private String password;
-
-    private String roles;
-
-    @OneToOne(mappedBy = "memberEntity")
-    private RefreshTokenEntity refreshEntity;
-
+    @OneToOne
+    @JoinColumn(name="member_fk", referencedColumnName = "member_pk")
+    private MemberEntity memberEntity;
 }

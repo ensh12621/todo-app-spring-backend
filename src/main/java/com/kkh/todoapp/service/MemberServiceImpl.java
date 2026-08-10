@@ -1,5 +1,6 @@
 package com.kkh.todoapp.service;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ public class MemberServiceImpl implements MemberService {
     
     private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder;
+    private MemberExceptionHandler badCredentialHandler;
     
-    public MemberServiceImpl(MemberRepository memberRepository, PasswordEncoder passwordEncoder){
+    public MemberServiceImpl(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberExceptionHandler badCredentialHandler){
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.badCredentialHandler = badCredentialHandler;
     }
 
     
@@ -38,5 +41,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean matchLogin(LoginDTO loginDTO) {
         return memberRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword()).orElseThrow(() -> new UsernameNotFoundException("no user found")) != null;
+    }
+
+    @Override
+    public MemberEntity findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> badCredentialHandler.badCredentailException());
     }
 }
