@@ -36,12 +36,14 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/todo/**").permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/todo/**").authenticated()
                                                     .requestMatchers("/member/login-done-test").authenticated()
                                                     .requestMatchers("/member/login").permitAll()
                                                     .requestMatchers("/member/add").permitAll()
-                                                    
-                        .anyRequest().permitAll())
+                                                    .anyRequest().permitAll())
+                    //.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())                                    
+
+                        
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

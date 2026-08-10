@@ -56,7 +56,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = null, email = null;
 
 
-        logger.info("bearer token recied => {}", authHeader);
+        logger.info("bearer token received => {}", authHeader);
 
         int n = 1;
 
