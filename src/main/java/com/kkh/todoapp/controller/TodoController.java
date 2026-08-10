@@ -1,6 +1,7 @@
 package com.kkh.todoapp.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kkh.todoapp.entity.TodoEntity;
@@ -46,6 +47,9 @@ public class TodoController {
         return ResponseEntity.ok(vo);      
     }
 
-    
+    @GetMapping("/search-by-title")
+    public List<TodoEntity> searchByTitle(@RequestParam String keyword){
+        return todoService.findByTitle(keyword);
+    }
     
 }

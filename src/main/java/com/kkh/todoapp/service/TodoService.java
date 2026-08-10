@@ -9,4 +9,5 @@ public interface TodoService {
        List<TodoEntity> getMemoList();
        boolean save(TodoVO vo);              
        String test();
+       List<TodoEntity> findByTitle(String keyword);
 }

@@ -38,4 +38,9 @@ public class TodoServiceImpl implements TodoService{
     public String test() {
         return "200";
     }
+
+    @Override
+    public List<TodoEntity> findByTitle(String keyword) {
+        return todoRepository.findByTitleContainingIgnoreCase(keyword);
+    }
 }
