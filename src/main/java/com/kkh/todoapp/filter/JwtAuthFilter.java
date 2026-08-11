@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kkh.todoapp.service.JwtService;
+import com.kkh.todoapp.service.MemberExceptionHandler;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,19 +25,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private JwtService jwtService;
     private UserDetailsService userDetailsService;
+    private MemberExceptionHandler memberExceptionHandler;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
 
-    public JwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    public JwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService,
+            MemberExceptionHandler memberExceptionHandler) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.memberExceptionHandler = memberExceptionHandler;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        logger.info("필터 진입 중..");
+        // logger.info("필터 진입 중..");
 
         /*
          * 
@@ -51,40 +55,48 @@ public class JwtAuthFilter extends OncePerRequestFilter {
          * 5. 없다면 throw forbidden exception
          * 
          */
+        logger.info("상황 1");
 
         String authHeader = request.getHeader("Authorization");
         String token = null, email = null;
 
-
         logger.info("bearer token received => {}", authHeader);
-
-        int n = 1;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             email = jwtService.extractSubject(token);
-            n = 2;
+
             logger.info("extracted email from the jwt: {}", email);
+
+            logger.info("토큰 길이: ({})", token.length());
+            logger.info("상황 2");
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            n = 3;
-
+            logger.info("상황 3");
             if (jwtService.validateToken(token)) { // check expiration date
+                logger.info("상황 4");
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null /* credentials */, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                n = 4;
+
             }
         }
 
-
-        logger.info("n => {}", n);
+        logger.info("상황 5");
 
         filterChain.doFilter(request, response);
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/member/login")
+                || path.startsWith("/member/add")
+                || path.startsWith("/member/refresh-JWT");
+
+    }
 }

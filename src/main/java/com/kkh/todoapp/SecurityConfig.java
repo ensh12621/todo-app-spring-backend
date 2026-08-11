@@ -36,9 +36,12 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/todo/**").authenticated()
-                                                    .requestMatchers("/member/login-done-test").authenticated()
+                .authorizeHttpRequests(auth -> auth
                                                     .requestMatchers("/member/login").permitAll()
+                                                    .requestMatchers("/member//refresh-JWT").permitAll()
+                                                    .requestMatchers("/todo/**").authenticated()
+                                                    .requestMatchers("/member/login-done-test").authenticated()
+                                                    
                                                     .requestMatchers("/member/add").permitAll()
                                                     .anyRequest().permitAll())
                     //.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())                                    

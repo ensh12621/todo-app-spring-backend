@@ -29,13 +29,13 @@ public class JwtServiceImpl implements JwtService {
     public String generateJwt(LoginDTO loginDTO) {
         Map<String, Object> claims = new HashMap<>();
 
-        logger.info("generate token that expires at {}", new Date(System.currentTimeMillis() + 1000 * 60 * 30));
+        logger.info("generate token that expires at {}", new Date(System.currentTimeMillis() + 1000 * 10 * 1));
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(loginDTO.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 10 * 1))
                 .signWith(getSignSaltKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

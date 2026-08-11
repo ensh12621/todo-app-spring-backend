@@ -80,6 +80,7 @@ public class MemberController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
+                
         logger.info("login email: {}, password: {} authenticated(): {}", loginDTO.getEmail(), loginDTO.getPassword(),
                 authentication.isAuthenticated());
 
