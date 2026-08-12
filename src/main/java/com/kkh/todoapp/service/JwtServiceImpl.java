@@ -25,6 +25,8 @@ public class JwtServiceImpl implements JwtService {
 
     public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
+    private static final int JWT_EXPIRATION_RETENTION = 1000 * 30;  // 30초
+
     @Override
     public String generateJwt(LoginDTO loginDTO) {
         Map<String, Object> claims = new HashMap<>();
@@ -35,7 +37,7 @@ public class JwtServiceImpl implements JwtService {
                 .setClaims(claims)
                 .setSubject(loginDTO.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 10 * 1))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_RETENTION))
                 .signWith(getSignSaltKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

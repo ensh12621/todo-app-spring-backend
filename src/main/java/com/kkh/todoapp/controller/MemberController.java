@@ -23,8 +23,10 @@ import com.kkh.todoapp.service.JwtService;
 import com.kkh.todoapp.service.MemberService;
 import com.kkh.todoapp.service.RefreshTokenService;
 import com.kkh.todoapp.vo.JWTRefreshDTO;
+import com.kkh.todoapp.vo.JWTRefreshResponseDTO;
 import com.kkh.todoapp.vo.LoginDTO;
 import com.kkh.todoapp.vo.MemberDTO;
+import com.kkh.todoapp.vo.RefreshRequestDTO;
 
 @RestController
 @RequestMapping("/member")
@@ -103,8 +105,9 @@ public class MemberController {
 
     @PostMapping("/refresh-JWT")
     @ResponseBody
-    public String refreshJwt(@RequestParam String refreshToken) {
-        return refreshTokenService.validateRefreshToken(refreshToken);
-        
+    public ResponseEntity<?> refreshJwt(@RequestBody RefreshRequestDTO refreshRequestDTO) {
+        String newToken =  refreshTokenService.validateRefreshToken(refreshRequestDTO.getRefreshToken());
+        logger.info("new jwt generated: ({})", newToken);
+        return ResponseEntity.ok(JWTRefreshResponseDTO.builder().jwt(newToken).build());
     }
 }
