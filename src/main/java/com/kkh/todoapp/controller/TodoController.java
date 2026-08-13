@@ -17,39 +17,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 @RequestMapping("/todo")
 public class TodoController {
 
     private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
-    
+
     private TodoService todoService;
 
-    public TodoController(TodoService todoService){
-        this.todoService = todoService;        
-    }
- 
-
-
-    @GetMapping("/get-todo-list")
-    public List<TodoEntity> getTodoList() {
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // logger.info("authentication with " + authentication.getPrincipal().toString() + ", roles: " + authentication.getAuthorities());
-
-        return todoService.getMemoList();
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
     @PostMapping("/save-new-todo")
     public ResponseEntity<TodoVO> postMethodName(@RequestBody TodoVO vo) {
+        logger.info("신규 메모 등록 - ({}) / ({})", vo.getTitle(), vo.getContent());
         todoService.save(vo);
-        return ResponseEntity.ok(vo);      
+        return ResponseEntity.ok(vo);
+    }
+
+    @GetMapping("/get-todo-list")
+    public List<TodoEntity> getTodoList() {
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
+        // logger.info("authentication with " + authentication.getPrincipal().toString()
+        // + ", roles: " + authentication.getAuthorities());
+
+        return todoService.getMemoList();
     }
 
     @GetMapping("/search-by-title")
-    public List<TodoEntity> searchByTitle(@RequestParam String keyword){
+    public List<TodoEntity> searchByTitle(@RequestParam String keyword) {
         return todoService.findByTitle(keyword);
     }
-    
+
 }
