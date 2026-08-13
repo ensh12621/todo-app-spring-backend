@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kkh.todoapp.entity.TodoEntity;
 import com.kkh.todoapp.service.TodoService;
+import com.kkh.todoapp.vo.SearchTitleDTO;
 import com.kkh.todoapp.vo.TodoVO;
 
 import java.util.List;
@@ -47,8 +48,8 @@ public class TodoController {
     }
 
     @GetMapping("/search-by-title")
-    public List<TodoEntity> searchByTitle(@RequestParam String keyword) {
-        return todoService.findByTitle(keyword);
+    public List<TodoEntity> searchByTitle(@RequestBody SearchTitleDTO searchDTO) {
+        return todoService.findByTitle(searchDTO.getKeyword());
     }
 
 }
