@@ -38,7 +38,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
                                                     .requestMatchers("/member/login").permitAll()
-                                                    .requestMatchers("/member//refresh-JWT").permitAll()
+                                                    .requestMatchers("/member/refresh-JWT").permitAll()
+                                                    .requestMatchers("/kafka/**").permitAll()
                                                     .requestMatchers("/todo/**").authenticated()
                                                     .requestMatchers("/member/login-done-test").authenticated()
                                                     
